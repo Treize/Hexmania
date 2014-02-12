@@ -54,7 +54,7 @@ public class MapModel {
                     connections.clear ();
                     if ( tilesList != null )
                         tilesList = null;
-                    int tileID = 0; // TU ID
+
                     for ( int row = 0; row < config.getRows (); row++ ) {
                         tiles [ row ] = new TileModel [ config.getColumns () ];
 
@@ -64,8 +64,7 @@ public class MapModel {
                             if ( row % 2 == 1 && column % 2 == 0 )
                                 continue;
 
-                            tiles [ row ] [ column ] = new TileModel ( row, column, tileID ); // TU ID
-                            tileID++; // TU TEŻ ID
+                            tiles [ row ] [ column ] = new TileModel ( row, column );
                         }
                     }
 
@@ -176,7 +175,7 @@ public class MapModel {
         return selectedTile;
     }
 
-    public void switchPlayer() { // raz jeden gracz, raz drugi - UPGRADE NEEDED
+    public void switchPlayer() { // raz jeden gracz, raz drugi
         if(bluePlayerT) {
             if(blueBaseIsSet) {
                 selectedTile.setSelected ( true, blueTransp );

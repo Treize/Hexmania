@@ -37,10 +37,6 @@ public class FirstWin extends javax.swing.JFrame {
 
     int oldX;
     int oldY;
-    
-    // DO USTALENIA (pod mapę)
-    public static final int mapRows = 15;
-    public static final int mapColumns = 15;
 
     /** Creates new form FirstWin */
     public FirstWin() {
@@ -199,6 +195,17 @@ public class FirstWin extends javax.swing.JFrame {
             }
         });
 
+        javax.swing.GroupLayout drawSpaceLayout = new javax.swing.GroupLayout(drawSpace);
+        drawSpace.setLayout(drawSpaceLayout);
+        drawSpaceLayout.setHorizontalGroup(
+            drawSpaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 743, Short.MAX_VALUE)
+        );
+        drawSpaceLayout.setVerticalGroup(
+            drawSpaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 429, Short.MAX_VALUE)
+        );
+
         generate.setText("Show Map");
         generate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -211,33 +218,21 @@ public class FirstWin extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout drawSpaceLayout = new javax.swing.GroupLayout(drawSpace);
-        drawSpace.setLayout(drawSpaceLayout);
-        drawSpaceLayout.setHorizontalGroup(
-            drawSpaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(drawSpaceLayout.createSequentialGroup()
-                .addGap(319, 319, 319)
-                .addComponent(generate)
-                .addContainerGap(343, Short.MAX_VALUE))
-        );
-        drawSpaceLayout.setVerticalGroup(
-            drawSpaceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(drawSpaceLayout.createSequentialGroup()
-                .addComponent(generate)
-                .addGap(0, 406, Short.MAX_VALUE))
-        );
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(drawSpace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(generate)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(drawSpace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(29, 29, 29))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(generate))
         );
 
         pack();
@@ -254,21 +249,19 @@ private void generateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:ev
     edgeField.setText ( String.valueOf ( ConfigurationData.getInstance ().getEdge () ) );
 
     try {
-        ConfigurationData.getInstance ().setRows ( mapRows );
-        //ConfigurationData.getInstance ().setRows ( Integer.parseInt ( rowField.getText () ) );
+        ConfigurationData.getInstance ().setRows ( Integer.parseInt ( rowField.getText () ) );
     } catch ( Exception e ) {
-        //ConfigurationData.getInstance ().setRows ( 40 );//changed - 18
-        e.printStackTrace( System.err );
+        ConfigurationData.getInstance ().setRows ( 40 );//changed - 18
+        //e.printStackTrace( System.err );
     }
 
     rowField.setText ( String.valueOf ( ConfigurationData.getInstance ().getRows () ) );
 
     try {
-        ConfigurationData.getInstance ().setColumns ( mapColumns );
-        //ConfigurationData.getInstance ().setColumns ( Integer.parseInt ( columnField.getText () ) );
+        ConfigurationData.getInstance ().setColumns ( Integer.parseInt ( columnField.getText () ) );
     } catch ( Exception e ) {
-        //ConfigurationData.getInstance ().setColumns ( 46 );// changed 22
-        e.printStackTrace( System.err );
+        ConfigurationData.getInstance ().setColumns ( 46 );// changed 22
+        //e.printStackTrace( System.err );
     }
 
     columnField.setText ( String.valueOf ( ConfigurationData.getInstance ().getColumns () ) );
