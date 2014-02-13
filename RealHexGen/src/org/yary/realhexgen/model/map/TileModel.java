@@ -9,12 +9,21 @@ import org.yary.realhexgen.controller.events.HexEventRegister;
 import org.yary.realhexgen.controller.events.tile.RedrawTile;
 import org.yary.realhexgen.model.ConfigurationData;
 
-/**
+// id hexa ! ! ! ! ! 
+// atak, obrona, ruch
+// dijkstra oblicza czy można położyć jednostkę (odl. < x)
+// ew pop-up - info o niemożności położenia jednostki
+// ruch(), atak(), akcja()
+// czy jest jednostka, czy baza <- baza generuje jednostki
+// JA - DEPLOY(ID_gracza, rodzaj_jednostki) - rozstawianie jednostek wokol bazy
+// modyfikuje ilosc jednostek dla gracza - tablica globalna
+
+/*
  *
  * @author Yary Ribero
  */
 public class TileModel {
-
+    
     public static final double ROW_DISTANCE_FACTOR = 0.5;
     public static final double COLUMN_DISTANCE_FACTOR = Math.sqrt ( 3 ) / 2;
 
@@ -27,7 +36,9 @@ public class TileModel {
     
     private int row;
     private int column;
-    private Color baseColor;
+    private Color baseColor; // kolor bazowy-podstawowy (nie bazy)
+    private int id; // id hexa
+    public boolean isBase = false; // określam czy hex jest bazą (domyślnie nie jest)
 
     private boolean selected = false;
     private Color color;
@@ -40,7 +51,7 @@ public class TileModel {
     public Color redPlayer;
     public Color bluePlayer;
     
-    public TileModel ( int row, int column ) throws IllegalArgumentException {
+    public TileModel ( int row, int column, int id ) throws IllegalArgumentException {
         if ( row < 0 )
             throw new IllegalArgumentException ( "Parameter row out of bound [0,+inf]: " + row );
 
@@ -49,6 +60,7 @@ public class TileModel {
 
         this.row = row;
         this.column = column;
+        this.id = id;
         
         color = baseColor = colors [ ( int ) ( Math.random () * colors.length ) ];
     }
@@ -64,6 +76,10 @@ public class TileModel {
     public Color getColor () {
         return color;
     }
+    
+    public int getId() {
+        return id;
+    }
 
     public void switchColor(Color c) {
         color = c;
@@ -75,6 +91,7 @@ public class TileModel {
         }
 
         this.selected = selected;
+        System.out.println("selected id: "+getId()); // sprawdzam sobie id
 
         if ( selected ) {
             switchColor(c);

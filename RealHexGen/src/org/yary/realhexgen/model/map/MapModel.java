@@ -22,14 +22,32 @@ public class MapModel {
 
     private TileModel [][] tiles;
     private TileModel selectedTile;
-    private boolean redPlayerT;
+    private boolean redPlayerT; // kolej czerwonego (T - turn)
     private boolean bluePlayerT;
     
-    // Atrapa. Przerobić na klasę (Base):
+    // Atrapa. Przerobić na klasę (Base): // HAHAHAHAHA THERE IS NO TIME FOR NICE CODE, DUUUUUUUDE!
     public Color blueTransp = new Color (1, 0, 0, 0.4f);
     public Color redTransp = new Color (0.0f, 0.0f, 1.0f, 0.4f);
-    private boolean redBaseIsSet;
-    private boolean blueBaseIsSet;
+    private boolean redBaseIsSet; // ustawiono bazę gracza czerwonego
+    private int redBaseId;
+    private boolean blueBaseIsSet; // ustawiono bazę gracza niebieskiego
+    private int blueBaseId;
+    
+    public int getRedBaseId() {
+        return redBaseId;
+    }
+
+    public void setRedBaseId(int redBaseId) {
+        this.redBaseId = redBaseId;
+    }
+
+    public int getBlueBaseId() {
+        return blueBaseId;
+    }
+
+    public void setBlueBaseId(int blueBaseId) {
+        this.blueBaseId = blueBaseId;
+    }
     
     private LinkedList < TileModel > tilesList;
     private LinkedList < TileConnection > connections = new LinkedList < TileConnection > ();
@@ -54,7 +72,7 @@ public class MapModel {
                     connections.clear ();
                     if ( tilesList != null )
                         tilesList = null;
-
+                    int tileID = 0; // TU ID
                     for ( int row = 0; row < config.getRows (); row++ ) {
                         tiles [ row ] = new TileModel [ config.getColumns () ];
 
@@ -64,7 +82,8 @@ public class MapModel {
                             if ( row % 2 == 1 && column % 2 == 0 )
                                 continue;
 
-                            tiles [ row ] [ column ] = new TileModel ( row, column );
+                            tiles [ row ] [ column ] = new TileModel ( row, column, tileID ); // TU ID
+                            tileID++; // TU TEŻ ID
                         }
                     }
 
@@ -115,6 +134,16 @@ public class MapModel {
         );
     }
 
+    // --------- DEPLOY --------- // Emi
+    
+    public void deploy(int gamerId, int unitId) {
+        
+    }
+       
+    // ----- end of DEPLOY ------
+    
+    
+    
     /*private void fitDijkstra () {
         algorithms.put ( "Dijkstra", new Dijkstra ( this ) );
     }*/
@@ -175,14 +204,16 @@ public class MapModel {
         return selectedTile;
     }
 
-    public void switchPlayer() { // raz jeden gracz, raz drugi
-        if(bluePlayerT) {
+    public void switchPlayer() { // raz jeden gracz, raz drugi - UPGRADE NEEDED
+        if(bluePlayerT) { // kolej niebieskiego
             if(blueBaseIsSet) {
-                selectedTile.setSelected ( true, blueTransp );
+                selectedTile.setSelected ( true, blueTransp ); // ustawiam kolor (niebieski)
                 bluePlayerT = false;
                 redPlayerT = true;
             } else if(!blueBaseIsSet){
                 selectedTile.setSelected ( true, Color.BLUE ); // set the Blue Base
+                selectedTile.isBase=true;
+                this.setBlueBaseId(selectedTile.getId()); // ustawiam id bazy
                 bluePlayerT = false;
                 redPlayerT = true;
                 blueBaseIsSet = true;
@@ -194,6 +225,8 @@ public class MapModel {
                 bluePlayerT = true;
             } else if(!redBaseIsSet){
                 selectedTile.setSelected ( true, Color.RED ); // set the Red Base
+                selectedTile.isBase=true; // Ten hex jest bazą
+                this.setRedBaseId(selectedTile.getId());
                 redPlayerT = false;
                 bluePlayerT = true;
                 redBaseIsSet = true;
@@ -232,6 +265,9 @@ public class MapModel {
         }
 
         selectedTile = tiles [ row ] [column ];
+        if(selectedTile.isBase) { // tylko do testu
+            System.out.println("TO JEST BAZA "+selectedTile.getColor());
+        }
 
         if ( selectedTile == null )
             throw new Exception ( "Tile " + row + "," + column + " is unexpectedly null" );
@@ -351,4 +387,5 @@ public class MapModel {
 
         return tilesList;
     }
+
 }

@@ -11,10 +11,10 @@ public class ConfigurationData {
 
     private static ConfigurationData instance;
 
-    private int rows = 18;//10
-    private int columns = 22;//10
+    private int rows = 12;//10
+    private int columns = 12;//10
     private int edge = 40;//40
-    private int height = 20;//70
+    private int height = 70;//70
 
     public final int MAX_ROWS = 10000;
     public final int MAX_COLUMNS = 10000;
