@@ -39,6 +39,7 @@ public class TileModel {
     private Color baseColor; // kolor bazowy-podstawowy (nie bazy)
     private int id; // id hexa
     public boolean isBase = false; // określam czy hex jest bazą (domyślnie nie jest)
+    public boolean isOccupied = false;
 
     private boolean selected = false;
     private Color color;
@@ -65,6 +66,10 @@ public class TileModel {
         color = baseColor = colors [ ( int ) ( Math.random () * colors.length ) ];
     }
 
+    public void setOccupied(boolean occ) {
+        this.isOccupied = occ;
+    }
+    
     public int getRow () {
         return row;
     }

@@ -204,6 +204,7 @@ public class MapModel {
         return selectedTile;
     }
 
+    
     public void switchPlayer() { // raz jeden gracz, raz drugi - UPGRADE NEEDED
         if(bluePlayerT) { // kolej niebieskiego
             if(blueBaseIsSet) {
@@ -232,6 +233,7 @@ public class MapModel {
                 redBaseIsSet = true;
             }
         }
+        selectedTile.setOccupied(true);
     }
     
     public void setSelectedTile ( int row, int column ) throws Exception {
@@ -272,7 +274,9 @@ public class MapModel {
         if ( selectedTile == null )
             throw new Exception ( "Tile " + row + "," + column + " is unexpectedly null" );
 
-        switchPlayer();
+        if (!selectedTile.isOccupied) {
+            switchPlayer();
+        }
         //selectedTile.setSelected ( true );
     }
 
