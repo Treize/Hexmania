@@ -22,44 +22,33 @@ public class MapModel {
 
     private TileModel [][] tiles;
     private TileModel selectedTile;
-    private boolean redPlayerT; // kolej czerwonego (T - turn)
-    private boolean bluePlayerT;
     
-    // Atrapa. Przerobić na klasę (Base): // HAHAHAHAHA THERE IS NO TIME FOR NICE CODE, DUUUUUUUDE!
-    public Color blueTransp = new Color (1, 0, 0, 0.4f);
-    public Color redTransp = new Color (0.0f, 0.0f, 1.0f, 0.4f);
-    private boolean redBaseIsSet; // ustawiono bazę gracza czerwonego
-    private int redBaseId;
-    private boolean blueBaseIsSet; // ustawiono bazę gracza niebieskiego
-    private int blueBaseId;
-    
-    public int getRedBaseId() {
-        return redBaseId;
-    }
-
-    public void setRedBaseId(int redBaseId) {
-        this.redBaseId = redBaseId;
-    }
-
-    public int getBlueBaseId() {
-        return blueBaseId;
-    }
-
-    public void setBlueBaseId(int blueBaseId) {
-        this.blueBaseId = blueBaseId;
-    }
+    // Atrapa. Przerobić na klasę (Base): // HAHAHAHAHA THERE IS NO TIME FOR A NICE CODE, DUUUUUUUDE!
+    Player player1;
+    Player player2;
+    public Color blueTransp = new Color (0, 0, 1, 0.4f); // gracz1
+    public Color redTransp = new Color (1, 0, 0, 0.4f); //gracz2
+    BaseModel p1Base;
+    BaseModel p2Base;
+    public boolean p1BaseIsSet;
+    public boolean p2BaseIsSet;
     
     private LinkedList < TileModel > tilesList;
     private LinkedList < TileConnection > connections = new LinkedList < TileConnection > ();
 
     //private LinkedList < TileModel > path;
 
+    public boolean basesAreSet() {
+        return (p1BaseIsSet && p2BaseIsSet) ? true:false;
+    }
+    
     public MapModel () {
         final HexEventRegister instance = HexEventRegister.getInstance ();
-        redPlayerT = true; // czerwony zaczyna
-        bluePlayerT = false;
-        redBaseIsSet = false;
-        blueBaseIsSet = false;
+        player1 = new Player(1);
+        player2 = new Player(2);
+        player1.turn=true; // gracz1 zaczyna
+        p1BaseIsSet=false;
+        p2BaseIsSet=false;
         
         instance.registerHandlerForEvent (
             ConfigurationChanged.class,
@@ -204,36 +193,44 @@ public class MapModel {
         return selectedTile;
     }
 
+    public void switchTurns() { // ustawia odpowiednio pola "turn" w obiektach BaseModel (dla każdej bazy)
+        player1.switchTurn();
+        player2.switchTurn();
+    }
     
-    public void switchPlayer() { // raz jeden gracz, raz drugi - UPGRADE NEEDED
-        if(bluePlayerT) { // kolej niebieskiego
-            if(blueBaseIsSet) {
-                selectedTile.setSelected ( true, blueTransp ); // ustawiam kolor (niebieski)
-                bluePlayerT = false;
-                redPlayerT = true;
-            } else if(!blueBaseIsSet){
-                selectedTile.setSelected ( true, Color.BLUE ); // set the Blue Base
-                selectedTile.isBase=true;
-                this.setBlueBaseId(selectedTile.getId()); // ustawiam id bazy
-                bluePlayerT = false;
-                redPlayerT = true;
-                blueBaseIsSet = true;
+    public void setBases() {
+        //if(!basesAreSet()){
+            if(player1.turn) {
+                selectedTile.setSelected ( true, Color.BLUE ); // gracz1 - niebieska baza
+                System.out.println("stawiam baze niebieska");
+                p1Base= new BaseModel(selectedTile.getRow(),selectedTile.getColumn(),selectedTile.getId(),player1.getId());
+                p1Base.setNeighbors();
+                p1BaseIsSet=true;
+            } else if(player2.turn) {
+                System.out.println("stawiam baze czerwona");
+                selectedTile.setSelected ( true, Color.RED ); // gracz2 - czerwona baza
+                p2Base= new BaseModel(selectedTile.getRow(),selectedTile.getColumn(),selectedTile.getId(),player2.getId());
+                p2Base.setNeighbors();
+                p2BaseIsSet=true;
             }
-        } else if(redPlayerT) {
-            if(redBaseIsSet) {
-                selectedTile.setSelected ( true, redTransp );
-                redPlayerT = false;
-                bluePlayerT = true;
-            } else if(!redBaseIsSet){
-                selectedTile.setSelected ( true, Color.RED ); // set the Red Base
-                selectedTile.isBase=true; // Ten hex jest bazą
-                this.setRedBaseId(selectedTile.getId());
-                redPlayerT = false;
-                bluePlayerT = true;
-                redBaseIsSet = true;
-            }
+            selectedTile.setOccupied(true);
+            switchTurns();
+        //}
+    }
+    
+    public void switchPlayers() { // raz jeden, raz drugi
+        //setBases(); // to wywołać przed wywołaniem funkcji switchPlayer
+        if(player1.turn) {
+            selectedTile.setSelected ( true, blueTransp ); // ustawiam kolor (niebieski)
+            System.out.println("blue");
+            //switchTurns();
+        } else if(player2.turn) {
+            selectedTile.setSelected(true, redTransp);
+            System.out.println("red");
+            //switchTurns();
         }
         selectedTile.setOccupied(true);
+        switchTurns();
     }
     
     public void setSelectedTile ( int row, int column ) throws Exception {
@@ -275,7 +272,11 @@ public class MapModel {
             throw new Exception ( "Tile " + row + "," + column + " is unexpectedly null" );
 
         if (!selectedTile.isOccupied) {
-            switchPlayer();
+            if(!basesAreSet()) {
+                setBases();
+            } else {
+                switchPlayers();
+            }
         }
         //selectedTile.setSelected ( true );
     }
